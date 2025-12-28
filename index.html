@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neokai - Fresh Job Postings in Your Inbox</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f6f6ef;
+            --accent: #ff6600;
+            --text: #000000;
+            --text-light: #828282;
+            --border: #e0e0e0;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: var(--accent);
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--white);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 16px;
+            margin-left: auto;
+            font-size: 14px;
+        }
+
+        .nav a {
+            color: var(--white);
+            text-decoration: none;
+            opacity: 0.95;
+            transition: opacity 0.2s;
+        }
+
+        .nav a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-bottom: 60px;
+        }
+
+        .hero h1 {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-light);
+            max-width: 600px;
+            margin-bottom: 12px;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, transparent 0%, transparent 50%, rgba(255, 102, 0, 0.15) 50%, rgba(255, 102, 0, 0.15) 100%);
+            background-size: 200% 100%;
+            background-position: 100% 0;
+            padding: 2px 4px;
+            animation: highlight 1.5s ease forwards;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes highlight {
+            to {
+                background-position: 0 0;
+            }
+        }
+
+        /* Pricing Cards */
+        .pricing {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .plan {
+            background: var(--white);
+            border: 2px solid var(--border);
+            padding: 32px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .plan:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 20px rgba(255, 102, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .plan.featured {
+            border-color: var(--accent);
+            border-width: 3px;
+        }
+
+        .plan.featured::before {
+            content: "POPULAR";
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: var(--accent);
+            color: var(--white);
+            padding: 4px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .plan-name {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .plan-price {
+            font-size: 48px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .plan-price span {
+            font-size: 18px;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .plan-description {
+            color: var(--text-light);
+            margin-bottom: 24px;
+            font-size: 15px;
+        }
+
+        .features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .features li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 15px;
+            position: relative;
+            padding-left: 24px;
+        }
+
+        .features li:last-child {
+            border-bottom: none;
+        }
+
+        .features li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .features li.disabled {
+            color: var(--text-light);
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+
+        .features li.disabled::before {
+            content: "−";
+            color: var(--text-light);
+        }
+
+        .cta-button {
+            width: 100%;
+            padding: 16px;
+            background: var(--accent);
+            color: var(--white);
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'IBM Plex Mono', monospace;
+            letter-spacing: 0.5px;
+        }
+
+        .cta-button:hover {
+            background: #ff7711;
+            box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+        }
+
+        .cta-button:active {
+            transform: translateY(1px);
+        }
+
+        .cta-button.secondary {
+            background: var(--white);
+            color: var(--accent);
+            border: 2px solid var(--accent);
+        }
+
+        .cta-button.secondary:hover {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        /* How it Works */
+        .how-it-works {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 24px;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 8px;
+            display: inline-block;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .step {
+            position: relative;
+        }
+
+        .step-number {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 48px;
+            font-weight: 600;
+            color: rgba(255, 102, 0, 0.2);
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            z-index: 0;
+        }
+
+        .step-content {
+            position: relative;
+            z-index: 1;
+            padding-left: 30px;
+        }
+
+        .step h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .step p {
+            color: var(--text-light);
+            font-size: 15px;
+        }
+
+        /* FAQ */
+        .faq {
+            margin-bottom: 60px;
+        }
+
+        .faq-item {
+            background: var(--white);
+            border: 1px solid var(--border);
+            margin-bottom: 12px;
+            padding: 20px 24px;
+        }
+
+        .faq-question {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .faq-answer {
+            color: var(--text-light);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 2px solid var(--border);
+            padding: 40px 0 20px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.2s;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--white);
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-light);
+            line-height: 1;
+            font-weight: 300;
+        }
+
+        .close:hover {
+            color: var(--text);
+        }
+
+        .modal h2 {
+            font-family: 'IBM Plex Mono', monospace;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            font-size: 15px;
+            font-family: 'IBM Plex Sans', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .job-titles-input {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .job-title-item {
+            display: flex;
+            gap: 8px;
+        }
+
+        .add-job-title {
+            background: var(--white);
+            color: var(--accent);
+            border: 2px dashed var(--accent);
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .add-job-title:hover {
+            background: rgba(255, 102, 0, 0.05);
+        }
+
+        .remove-job-title {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0 12px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .remove-job-title:hover {
+            background: #c82333;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 24px;
+            }
+
+            .pricing {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <a href="#" class="logo">Neokai</a>
+        <nav class="nav">
+            <a href="#how">How it works</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#faq">FAQ</a>
+        </nav>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>Stop missing fresh job postings.<br>Get <span class="highlight">yesterday's jobs</span> in your inbox.</h1>
+            <p>Daily digest of Tech, Software and Data roles posted in the last 24 hours from company career sites.</p>
+            <p style="font-size: 16px; margin-top: 8px; font-weight: 500;">🎯 We <span style="color: var(--accent);">SKIP</span> LinkedIn & Indeed. We go straight to <span style="color: var(--accent);">company career pages</span>.</p>
+            <p style="font-size: 15px; margin-top: 4px; color: var(--text-light);">No spam. No old listings. No job board noise. <strong>Pure convenience</strong>.</p>
+        </div>
+
+        <!-- Pricing Section -->
+        <div id="pricing" class="pricing">
+            
+            <!-- Free Plan -->
+            <div class="plan">
+                <div class="plan-name">Free</div>
+                <div class="plan-price">$20<span>/month</span></div>
+                <div class="plan-description">Test the waters</div>
+                <ul class="features">
+                    <li>1 job title tracked</li>
+                    <li>ALL platforms included</li>
+                    <li>24-hour freshness guarantee</li>
+                    <li class="disabled">Multiple job titles (up to 4)</li>
+                    <li class="disabled">Priority support</li>                
+                </ul>
+                <a href="https://tally.so/r/pbdEob" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                <button class="cta-button secondary">START FREE</button>
+                </a>
+            </div>
+
+            <!-- Premium Plan -->
+            <div class="plan featured">
+                <div class="plan-name">Premium</div>
+                <div class="plan-price">$100<span> for 6 months</span></div>
+                <div class="plan-description">Maximum coverage</div>
+                <ul class="features">
+                    <li>Track up to 4 job titles</li>
+                    <li>ALL platforms included</li>
+                    <li>Daily email digest</li>
+                    <li>24-hour freshness guarantee</li>
+                    <li>Priority support</li>
+                </ul>
+                <a href="https://tally.so/r/pbdEob" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                <button class="cta-button">START PREMIUM</button>
+                </a>
+            </div>
+
+        </div>
+
+        <!-- How It Works -->
+        <div id="how" class="how-it-works">
+            <h2 class="section-title">How it works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Sign up</h3>
+                        <p><a href="https://tally.so/r/pbdEob" target="_blank" rel="noopener noreferrer" style="color: var(--accent); font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--accent);">Fill the form</a> with your job preferences — takes 30 seconds.</p>
+                        <p style="font-size: 14px; color: var(--text-light); margin-top: 8px;">Choose your plan, select job titles, and you're done.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>We scan daily</h3>
+                        <p>Every morning, we search company career sites for postings from the last 24 hours.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Get fresh jobs</h3>
+                        <p>Receive a clean, organized email with only new jobs. No duplicates, no old listings, no LinkedIn/Indeed noise.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Apply first</h3>
+                        <p>Beat the crowd by applying within hours of posting. Higher visibility = better chances.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Why Section -->
+        <div class="how-it-works" style="margin-top: 60px;">
+            <h2 class="section-title">Why not LinkedIn or Indeed?</h2>
+            <div style="background: var(--white); border-left: 4px solid var(--accent); padding: 30px; margin-bottom: 20px;">
+                <p style="font-size: 16px; line-height: 1.8; margin-bottom: 16px;">
+                    LinkedIn and Indeed are <strong>flooded</strong> with applications. By the time a job appears there, hundreds have already applied.
+                </p>
+                <p style="font-size: 16px; line-height: 1.8; margin-bottom: 16px;">
+                    We go directly to <strong style="color: var(--accent);">company career sites.</strong> These jobs are posted here <em>first</em>, often hours or days before they hit LinkedIn.
+                </p>
+                <p style="font-size: 16px; line-height: 1.8; margin-bottom: 16px;">
+                    <strong>You could do this yourself.</strong> You could visit 50+ career sites every morning, run complex search queries, filter by date, deduplicate results, and compile everything into a spreadsheet.
+                </p>
+                <p style="font-size: 18px; line-height: 1.8; font-weight: 600; color: var(--accent); margin-bottom: 0;">
+                    Or you could pay $20/month and get it in your inbox at 7 AM. That's the convenience we sell.
+                </p>
+            </div>
+            <div style="background: #f8f9fa; padding: 20px; border: 1px solid var(--border); text-align: center;">
+                <p style="font-size: 14px; color: var(--text-light); margin: 0;">
+                    💡 <strong>Transparency:</strong> We're a convenience service. The value is in the automation, consistency, and time you save — not in secret access.
+                </p>
+            </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="faq">
+            <h2 class="section-title">FAQ</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">Why don't you include LinkedIn or Indeed?</div>
+                <div class="faq-answer">LinkedIn and Indeed are saturated. By the time jobs appear there, you're competing with hundreds of applicants. We go directly to company career sites (Greenhouse, Lever, Workday, Ashby, etc.) where jobs are posted first. This gives you a time advantage — often applying hours or even days before the job hits LinkedIn.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What job platforms do you search?</div>
+                <div class="faq-answer">We search company-direct career sites: Greenhouse, Lever, Workday, Ashby, iCIMS, ADP, Taleo, and custom company career pages. We're constantly adding more sources. Premium users get all platforms; free users choose one platform.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How fresh are the jobs?</div>
+                <div class="faq-answer">Every job in your digest was posted within the last 24 hours. We run searches early each morning (around 6 AM) to catch yesterday's postings, and you receive your email by 7 AM.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Can I track multiple job titles?</div>
+                <div class="faq-answer">Free users can track 1 job title across all platform. Premium users can track up to 4 different job titles across all platforms (e.g., "Data Scientist", "Machine Learning Engineer", "AI Researcher", "Data Analyst").</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Couldn't I just do this myself?</div>
+                <div class="faq-answer">Absolutely! That's what makes us ethical. You could manually visit 50+ career sites daily, run advanced search queries, filter by date, deduplicate results, and organize everything. We're selling convenience — we automate this process and deliver clean results to your inbox every morning. You're paying to save 30-60 minutes daily.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What if I want to pause my subscription?</div>
+                <div class="faq-answer">You can pause or cancel anytime from your account settings. No contracts, no hassle.</div>
+            </div>
+
+            
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Built for Tech Professionals who want to be first in line.</p>
+            <p style="margin-top: 8px;">
+                <a href="#">Privacy Policy</a> · 
+                <a href="#">Terms</a> · 
+                <a href="mailto:info@neokai.dev">Contact</a>
+            </p>
+            <p style="margin-top: 20px; font-size: 12px;">© 2025 Neokai · Not affiliated with any job platforms</p>
+        </div>
+
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSignup()">&times;</span>
+            <h2 id="modalTitle">Start Free</h2>
+            
+            <form id="signupForm" onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required placeholder="you@example.com">
+                </div>
+
+                <!-- Platform selection for free tier -->
+                <div class="form-group" id="platformSelection" style="display: none;">
+                    <label for="platform">Choose Platform (Free Tier)</label>
+                    <select id="platform" required>
+                        <option value="">Select a platform...</option>
+                        <option value="greenhouse">Greenhouse</option>
+                        <option value="lever">Lever</option>
+                        <option value="workday">Workday</option>
+                        <option value="ashby">Ashby</option>
+                        <option value="icims">iCIMS</option>
+                        <option value="adp">ADP</option>
+                    </select>
+                    <p style="font-size: 13px; color: var(--text-light); margin-top: 6px;">
+                        Free tier: 1 job title from 1 platform. Upgrade to Premium for all platforms.
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="jobTitles">Job Title(s) to Track</label>
+                    <div class="job-titles-input" id="jobTitlesContainer">
+                        <div class="job-title-item">
+                            <input type="text" class="job-title" placeholder="e.g., Data Scientist" required>
+                        </div>
+                    </div>
+                    <button type="button" class="add-job-title" id="addJobTitleBtn" style="display: none; margin-top: 8px;" onclick="addJobTitleField()">+ Add another job title (max 4)</button>
+                    <p id="premiumNote" style="display: none; font-size: 13px; color: var(--text-light); margin-top: 6px;">
+                        Premium: Track up to 4 job titles across ALL platforms
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="preferences">Preferences (optional)</label>
+                    <select id="preferences">
+                        <option value="">Any location</option>
+                        <option value="remote">Remote only</option>
+                        <option value="onsite">On-site only</option>
+                        <option value="hybrid">Hybrid</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="cta-button" id="submitBtn">GET STARTED</button>
+            </form>
+
+            <p style="margin-top: 20px; font-size: 13px; color: var(--text-light); text-align: center;">
+                By signing up, you agree to our Terms & Privacy Policy
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let currentPlan = 'free';
+
+        function openSignup(plan) {
+            currentPlan = plan;
+            const modal = document.getElementById('signupModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const addBtn = document.getElementById('addJobTitleBtn');
+            const platformSelection = document.getElementById('platformSelection');
+            const platformSelect = document.getElementById('platform');
+            const premiumNote = document.getElementById('premiumNote');
+            
+            if (plan === 'free') {
+                modalTitle.textContent = 'Start Free';
+                addBtn.style.display = 'none';
+                platformSelection.style.display = 'block';
+                platformSelect.required = true;
+                premiumNote.style.display = 'none';
+                
+                // Remove extra job title fields if any
+                const container = document.getElementById('jobTitlesContainer');
+                while (container.children.length > 1) {
+                    container.removeChild(container.lastChild);
+                }
+            } else {
+                modalTitle.textContent = 'Start Premium ($20/month)';
+                addBtn.style.display = 'block';
+                platformSelection.style.display = 'none';
+                platformSelect.required = false;
+                premiumNote.style.display = 'block';
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeSignup() {
+            const modal = document.getElementById('signupModal');
+            modal.classList.remove('active');
+        }
+
+        function addJobTitleField() {
+            const container = document.getElementById('jobTitlesContainer');
+            const currentCount = container.children.length;
+            
+            if (currentCount >= 4) {
+                alert('Premium plan allows up to 4 job titles');
+                return;
+            }
+
+            const newField = document.createElement('div');
+            newField.className = 'job-title-item';
+            newField.innerHTML = `
+                <input type="text" class="job-title" placeholder="e.g., Machine Learning Engineer" required>
+                <button type="button" class="remove-job-title" onclick="removeJobTitleField(this)">×</button>
+            `;
+            container.appendChild(newField);
+        }
+
+        function removeJobTitleField(btn) {
+            btn.parentElement.remove();
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const jobTitles = Array.from(document.querySelectorAll('.job-title'))
+                .map(input => input.value)
+                .filter(val => val.trim() !== '');
+            const preferences = document.getElementById('preferences').value;
+            const platform = document.getElementById('platform').value;
+
+            const signupData = {
+                plan: currentPlan,
+                email: email,
+                jobTitles: jobTitles,
+                preferences: preferences
+            };
+
+            if (currentPlan === 'free') {
+                signupData.platform = platform;
+            }
+
+            // Here you would normally send this to your backend
+            console.log(signupData);
+
+            // For demo purposes, show success message
+            let message = `✓ Success! You're signed up for the ${currentPlan} plan.\n\nEmail: ${email}\nJob titles: ${jobTitles.join(', ')}`;
+            
+            if (currentPlan === 'free') {
+                message += `\nPlatform: ${platform}`;
+            } else {
+                message += '\nAll platforms included';
+            }
+            
+            message += '\n\nCheck your inbox for confirmation.';
+            
+            alert(message);
+            
+            closeSignup();
+            document.getElementById('signupForm').reset();
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('signupModal');
+            if (event.target == modal) {
+                closeSignup();
+            }
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
